@@ -1,0 +1,121 @@
+[
+ {
+  "directory": "/home/burton/dev/c/gba/TicTacToe",
+  "arguments": [
+   "arm-none-eabi-gcc",
+   "-c",
+   "src/_func_defs.c",
+   "-mthumb-interwork",
+   "-mthumb",
+   "-O2",
+   "-Wall",
+   "-fno-strict-aliasing",
+   "-I./include",
+   "-o",
+   "bin/_func_defs.o"
+  ],
+  "file": "src/_func_defs.c"
+ },
+ {
+  "directory": "/home/burton/dev/c/gba/TicTacToe",
+  "arguments": [
+   "arm-none-eabi-gcc",
+   "-c",
+   "src/_menu.c",
+   "-mthumb-interwork",
+   "-mthumb",
+   "-O2",
+   "-Wall",
+   "-fno-strict-aliasing",
+   "-I./include",
+   "-o",
+   "bin/_menu.o"
+  ],
+  "file": "src/_menu.c"
+ },
+ {
+  "directory": "/home/burton/dev/c/gba/TicTacToe",
+  "arguments": [
+   "arm-none-eabi-gcc",
+   "-c",
+   "src/main.c",
+   "-mthumb-interwork",
+   "-mthumb",
+   "-O2",
+   "-Wall",
+   "-fno-strict-aliasing",
+   "-I./include",
+   "-o",
+   "bin/main.o"
+  ],
+  "file": "src/main.c"
+ },
+ {
+  "directory": "/home/burton/dev/c/gba/template_project_folder",
+  "arguments": [
+   "arm-none-eabi-gcc",
+   "-c",
+   "src/heck.c",
+   "-mthumb-interwork",
+   "-mthumb",
+   "-O2",
+   "-Wall",
+   "-fno-strict-aliasing",
+   "-I./include",
+   "-o",
+   "bin/heck.o"
+  ],
+  "file": "src/heck.c"
+ },
+ {
+  "directory": "/home/burton/dev/c/gba/template_project_folder",
+  "arguments": [
+   "arm-none-eabi-gcc",
+   "-c",
+   "src/hell.c",
+   "-mthumb-interwork",
+   "-mthumb",
+   "-O2",
+   "-Wall",
+   "-fno-strict-aliasing",
+   "-I./include",
+   "-o",
+   "bin/hell.o"
+  ],
+  "file": "src/hell.c"
+ },
+ {
+  "directory": "/home/burton/dev/c/gba/template_project_folder",
+  "arguments": [
+   "arm-none-eabi-gcc",
+   "-c",
+   "src/_func_defs.c",
+   "-mthumb-interwork",
+   "-mthumb",
+   "-O2",
+   "-Wall",
+   "-fno-strict-aliasing",
+   "-I./include",
+   "-o",
+   "bin/_func_defs.o"
+  ],
+  "file": "src/_func_defs.c"
+ },
+ {
+  "directory": "/home/burton/dev/c/gba/template_project_folder",
+  "arguments": [
+   "arm-none-eabi-gcc",
+   "-c",
+   "src/main.c",
+   "-mthumb-interwork",
+   "-mthumb",
+   "-O2",
+   "-Wall",
+   "-fno-strict-aliasing",
+   "-I./include",
+   "-o",
+   "bin/main.o"
+  ],
+  "file": "src/main.c"
+ }
+]
