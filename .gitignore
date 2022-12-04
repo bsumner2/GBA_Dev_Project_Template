@@ -1,0 +1,8 @@
+# gba-dev compiler's objs, binaries, and executables. Unnecessary to upload. Just wasting git server space.
+bin/*.o
+bin/*.gba
+bin/*.elf
+bin/*.sav
+
+# Clangd language server's cache. Unnecessary to upload. Just wasting git server space.
+.cache
