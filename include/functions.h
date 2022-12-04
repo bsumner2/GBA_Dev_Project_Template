@@ -1,3 +1,4 @@
+/** Written by Burton O Sumner With guidance from USC Columbia's Dr. William Hoskins and the Tonc GBA-Dev Libraries (https://www.coranac.com/tonc/text/toc.htm) */
 /** Function declarations */
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H

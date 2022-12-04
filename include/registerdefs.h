@@ -1,4 +1,6 @@
-//DEFINE REGISTERS AND THEIR CONSTS HERE.
+/** Written by Burton O Sumner With guidance from USC Columbia's Dr. William Hoskins and the Tonc GBA-Dev Libraries (https://www.coranac.com/tonc/text/toc.htm) */
+
+//DEFINE REGISTERS AND THEIR ASSOCIATED VALID VALUES AS #DEF CONSTANTS AND MACROS HERE.
 //240x160
 //ARM7TDMI 16.78 MHz
 //Color word is 16bits
