@@ -18,6 +18,7 @@ extern "C" {
 // Store function in IWRAM
 #define IWRAM_CODE __attribute__((section(".iwram"), long_call))
 
+
 // Store function in EWRAM
 #define EWRAM_CODE __attribute__((section(".ewram"), long_call))
 

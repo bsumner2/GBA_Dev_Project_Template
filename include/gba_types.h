@@ -2,11 +2,12 @@
 #define _GBA_TYPES_H_
 
 
-#include "sys/_stdint.h"
 #ifdef __cplusplus
+#include <cstdint>
 extern "C" {
 #else
 #include <stdbool.h>
+#include <stdint.h>
 #endif  /* extern "C" name mangler guard */
 
 #include "gba_util_macros.h"
@@ -22,7 +23,7 @@ typedef signed short s16_t;
 typedef signed int s32_t;
 typedef signed long int s64_t;
 
-
+typedef uintptr_t memaddr_t;
 
 typedef volatile u8_t vu8_t;
 typedef volatile u16_t vu16_t;
@@ -194,6 +195,24 @@ struct Interrupt_En {
   u16_t cartridge : 1;
   u16_t pad0 : 2;
 };
+
+typedef enum {
+  IRQ_VBLANK,
+  IRQ_HBLANK,
+  IRQ_VCOUNT,
+  IRQ_TIMER0,
+  IRQ_TIMER1,
+  IRQ_TIMER2,
+  IRQ_TIMER3,
+  IRQ_SERIAL,
+  IRQ_DMA0,
+  IRQ_DMA1,
+  IRQ_DMA2,
+  IRQ_DMA3,
+  IRQ_KEYPAD,
+  IRQ_GAMEPAK,
+  IRQ_IDX_LIM,
+} IRQ_Idx_t;
 
 #ifdef __cplusplus
 }

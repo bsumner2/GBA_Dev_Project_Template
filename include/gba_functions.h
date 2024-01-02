@@ -53,6 +53,20 @@ void* DMA_Memcpy2(void* dest, const void* src, u32_t dma_slot,
 
 
 
+IWRAM_CODE void ISR_master_ctl(void);
+void IRQ_init(IRQ_Callback_t);
+IRQ_Callback_t IRQ_Set_Master(IRQ_Callback_t);
+IRQ_Callback_t IRQ_Add(IRQ_Idx_t, IRQ_Callback_t);
+IRQ_Callback_t IRQ_Rm(IRQ_Idx_t);
+
+IRQ_Callback_t IRQ_Set(IRQ_Idx_t idx, IRQ_Callback_t cb, int priority);
+void IRQ_Enable(IRQ_Idx_t);
+void IRQ_Disable(IRQ_Idx_t);
+
+
+
+
+
 #ifdef __cplusplus
 }
 #endif  /* C++ Name Mangler guard */

@@ -26,6 +26,10 @@ extern "C" {
 #define PAL_OBJ_BUF ((u16_t*) MEM_PAL_OBJ)
 
 
+
+
+
+
 #define REG_DISPLAY_CNT *((vu32_t*) MEM_IO)
 #define REG_DISPLAY_STAT *((vu16_t*) (MEM_IO + 0x0004))
 #define REG_DISPLAY_VCOUNT *((vu16_t*) (MEM_IO + 0x0006))
@@ -66,6 +70,7 @@ extern "C" {
 #define REG_TM ((volatile Timer_Handle_t*) (MEM_IO + 0x0100))
 
 #define REG_IME *((vu16_t*) (MEM_IO + 0x0208))
+
 #define REG_IE  *((vu16_t*) (MEM_IO + 0x0200))
 #define REG_IF  *((vu16_t*) (MEM_IO + 0x0202))
 
