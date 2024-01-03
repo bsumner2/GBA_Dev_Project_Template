@@ -1,5 +1,6 @@
 #include "gba.h"
 #include "gba_def.h"
+#include "gba_functions.h"
 #include "gba_types.h"
 #include <stddef.h>
 
@@ -39,10 +40,15 @@ typedef struct {
   u16_t src_reg_flag;
 } ALIGN(4) IRQ_Src_Handle_t;
 
+
+#if USE_TONC_IRQ_TABLE_IMPL
 typedef struct {
   u32_t flag;
   IRQ_Callback_t isr_cb;
 } PACKED IRQ_Entry_t;
+#else
+typedef IRQ_Callback_t IRQ_Entry_t;
+#endif  /* GBA Cfg options (see include/gba_cfg.h for details). */
 
 IRQ_Entry_t _internal_isr_table[IRQ_IDX_LIM + 1] = {0};
 
@@ -66,19 +72,41 @@ static const IRQ_Src_Handle_t _internal_irq_srcs[] = {
 #define DEREF_REG_ADDR(address) (*((vu16_t*) (address)))
 #define DEREF_REG_OFS(offset) (*((vu16_t*) (MEM_IO + offset)))
 
-
 void IRQ_Enable(IRQ_Idx_t type) {
-  u16_t master_en = REG_IME;
+  const IRQ_Src_Handle_t* src;
+  u16_t master_enable = REG_IME;
 
   REG_IME = 0;
 
-  const IRQ_Src_Handle_t* src = &_internal_irq_srcs[type];
+  src = &_internal_irq_srcs[type];
   DEREF_REG_ADDR(MEM_IO+src->src_reg_ofs) |= src->src_reg_flag;
   REG_IE |= 1U<<type;
-  
-  REG_IME = master_en;
+  REG_IME = master_enable;
 }
 
+void IRQ_Init(IRQ_Callback_t isr_main_callback) {
+  REG_IME = 0;
+  REG_ISR_MAIN = (isr_main_callback ? isr_main_callback : ISR_master_ctl);
+  REG_IME = 1;
+}
+
+IRQ_Callback_t IRQ_SetMaster(IRQ_Callback_t new_master_isr_cb) {
+  IRQ_Callback_t ret = NULL;
+  u16_t master_enable = REG_IME;
+  REG_IME = 0;
+  if (new_master_isr_cb) {
+    ret = REG_ISR_MAIN;
+    REG_ISR_MAIN = new_master_isr_cb;
+  }
+  
+  REG_IME = master_enable;
+  return ret;
+}
+
+IRQ_Callback_t IRQ_Set(IRQ_Idx_t type, IRQ)
+
+
+#if USE_TONC_IRQ_TABLE_IMPL
 IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
   u16_t master_enable = REG_IME;
   IRQ_Callback_t ret = NULL;
@@ -101,10 +129,24 @@ IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
   ient[i].isr_cb = cb;
   ient[i].flag = flag;
 
-
-
-
-
   REG_IME = master_enable;
   return ret;
 }
+#else 
+IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
+  const IRQ_Src_Handle_t* src;
+  IRQ_Entry_t* dest;
+  IRQ_Callback_t ret = NULL;
+  u16_t master_enable = REG_IME;
+
+  REG_IME = 0;
+  dest = &_internal_isr_table[type];
+  src = &_internal_irq_srcs[type];
+  DEREF_REG_OFS(src->src_reg_ofs) |= src->src_reg_flag;
+  REG_IE |= (1<<type);
+  ret = *dest;
+  *dest = cb;
+  REG_IME = master_enable;
+  return ret;
+}
+#endif

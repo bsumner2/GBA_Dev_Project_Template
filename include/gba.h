@@ -11,6 +11,7 @@ extern "C" {
 #include "gba_inlines.h"
 #include "gba_bitfield_macros.h"
 #include "gba_util_macros.h"
+#include "gba_cfg.h"
 
 
 

@@ -45,5 +45,10 @@ struct Rect {
 }  /* namespace Mode3 */
 
 
+namespace Mode4 {
+
+
+};  /* namespace Mode4 */
+
 
 #endif  /* _BMP_TYPES_HPP_ */

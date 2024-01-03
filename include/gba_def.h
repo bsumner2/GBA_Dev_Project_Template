@@ -11,6 +11,7 @@ extern "C" {
 #define SCREEN_WIDTH      240
 #define SCREEN_HEIGHT     160
 
+#define MEM_BIOS_CTLS     0x03000000
 #define MEM_IO            0x04000000
 #define MEM_PAL           0x05000000
 #define MEM_VRAM          0x06000000
@@ -24,7 +25,6 @@ extern "C" {
 
 #define PAL_BG_BUF  ((u16_t*) MEM_PAL)
 #define PAL_OBJ_BUF ((u16_t*) MEM_PAL_OBJ)
-
 
 
 
@@ -73,12 +73,13 @@ extern "C" {
 
 #define REG_IE  *((vu16_t*) (MEM_IO + 0x0200))
 #define REG_IF  *((vu16_t*) (MEM_IO + 0x0202))
+#define REG_IFBIOS *((vu16_t*) (MEM_BIOS_CTLS + 0x7FF8))
 
 #define REG_IE_FIELDS *((volatile Interrupt_Enabler_t*) (MEM_IO + 0x0200))
 #define REG_IF_FIELDS *((volatile Interrupt_Enabler_t*) (MEM_IO + 0x0202))
 #define MEM_ISR_CALLBACK_ADDR 0x03007FFC
 
-#define REG_ISR_MAIN *((IRQ_Callback_t*) (MEM_ISR_CALLBACK_ADDR))
+#define REG_ISR_MAIN *((IRQ_Callback_t*) (MEM_BIOS_CTLS + 0x7FFC))
 
 
 #ifdef __cplusplus

@@ -10,30 +10,55 @@ extern "C" {
 #include "gba_bitfield_macros.h"
 #include <stdarg.h>
 
-// Opted for minimalist approach for SRAM interface. Essentially just acts as
-// an interface for doing read/write operations to in-cartridge SRAM 
-// byte-by-byte, since the bus width for the SRAM is only 8b. Feel
-// free to use the macro SRAM_BUF to do R/W manually, just keep in mind the
-// bus width constraint.
+/** 
+ * @brief Sets video and background mode flags for REG_DISPLAY_CNT. Avoid using 
+ * this raw variadic function. Use the macro, REG_DISPLAY_CNT_SET_MODES(...).
+ * @details If you insist against using the macro, just add 0xFFFFFFFF as the 
+ * final param when calling this function, as it's what signals to this function
+ * when to stop stepping through the va_list.
+ * @params Variadic: List of all mode flags you would like to set.
+ * */
 void _Internal_DisplayControl_SetModes(u32_t mode1, ...);
 #define REG_DISPLAY_CNT_SET_MODES(...) \
   _Internal_DisplayControl_SetModes(__VA_ARGS__, 0xFFFFFFFF)
 
+/** 
+ * @brief Write (amount: len) bytes of (src: data) to 
+ * (destination: &SRAM_BUF[offset])
+ * */
 void SRAM_Write(const void* data, u16_t offset, u16_t len);
 
-
+/** 
+ * @brief Read (amount: len) bytes of (src: &SRAM_BUF[offset]) and copy it to
+ * (destination: dest).
+ * */
 void SRAM_Read(void* dest, u16_t offset, u16_t len);
 
-
+/**
+ * @brief Initialize OAM Buffer 
+ * */
 void OAM_Init(Obj_Attr_t* obj_buf, u32_t obj_ct);
+/** 
+ * @brief Copy (amount: ct) Obj Attribute struct instances to dest from src.
+ */
+  void OAM_Copy(Obj_Attr_t* dest, const Obj_Attr_t* src, u32_t ct);
 
-void OAM_Copy(Obj_Attr_t* dest, const Obj_Attr_t* src, u32_t ct);
+// !!! TODO: FINISH DOCUMENTATION!
 
+/** 
+ * @brief Initialize object attributes for a given Object's Attributes struct.
+ * @param obj Object Attributes struct to be init'd.
+ * @param object_mode Signifies the mode to display the object in (i.e.: normal,
+ * affine, or hidden).
+ * ...
+ * */
 Obj_Attr_t* ObjAttr_Init(Obj_Attr_t* obj, u16_t object_mode, 
     u16_t graphics_mode, ObjectDims dims, u16_t x, u16_t y, bool_t mosaic,
     bool_t depth_8bpp, u16_t palette_idx, u16_t priority, u16_t tile_idx, 
     u16_t affine_idx);
 
+/** 
+ * */
 Obj_Attr_t* ObjAttr_QuickInit(Obj_Attr_t* obj, ObjectDims dims, u16_t pal_idx, 
     u16_t tile_idx, bool_t depth_8bpp);
 
@@ -54,8 +79,8 @@ void* DMA_Memcpy2(void* dest, const void* src, u32_t dma_slot,
 
 
 IWRAM_CODE void ISR_master_ctl(void);
-void IRQ_init(IRQ_Callback_t);
-IRQ_Callback_t IRQ_Set_Master(IRQ_Callback_t);
+void IRQ_Init(IRQ_Callback_t isr_main_callback);
+IRQ_Callback_t IRQ_SetMaster(IRQ_Callback_t new_master_isr_cb);
 IRQ_Callback_t IRQ_Add(IRQ_Idx_t, IRQ_Callback_t);
 IRQ_Callback_t IRQ_Rm(IRQ_Idx_t);
 

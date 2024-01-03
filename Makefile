@@ -30,7 +30,7 @@ LD=$(PREFIX)g++
 OBJ_CPY=$(PREFIX)objcopy
 
 ARCH=-mthumb-interwork -mthumb
-IARCH=-mthumb-interwork -march
+IARCH=-mthumb-interwork -marm
 SPECS=-specs=gba.specs
 CFLAGS_BASE=-O2 -Wall -Wextra -fno-strict-aliasing -I$(INC)
 ROM_CFLAGS=$(CFLAGS_BASE) $(ARCH)

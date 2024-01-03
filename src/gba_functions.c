@@ -38,7 +38,7 @@ void OAM_Init(Obj_Attr_t* obj_buf, u32_t obj_ct) {
 }
 
 void OAM_Copy(Obj_Attr_t* dest, const Obj_Attr_t* src, u32_t ct) {
-#ifndef __OAM_USE_RAW_WORD_COPY
+#if OAM_COPY_USE_STRUCT_COPIES
   while (ct--)
     *(dest++) = *(src++);
 #else
