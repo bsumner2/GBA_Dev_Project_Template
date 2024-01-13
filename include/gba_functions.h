@@ -78,13 +78,14 @@ void* DMA_Memcpy2(void* dest, const void* src, u32_t dma_slot,
 
 
 
-IWRAM_CODE void ISR_master_ctl(void);
+IWRAM_CODE void ISR_Master_ctl(void);
+
 void IRQ_Init(IRQ_Callback_t isr_main_callback);
 IRQ_Callback_t IRQ_SetMaster(IRQ_Callback_t new_master_isr_cb);
 IRQ_Callback_t IRQ_Add(IRQ_Idx_t, IRQ_Callback_t);
 IRQ_Callback_t IRQ_Rm(IRQ_Idx_t);
+IRQ_Callback_t IRQ_Set(IRQ_Idx_t type, IRQ_Callback_t cb, int opts);
 
-IRQ_Callback_t IRQ_Set(IRQ_Idx_t idx, IRQ_Callback_t cb, int priority);
 void IRQ_Enable(IRQ_Idx_t);
 void IRQ_Disable(IRQ_Idx_t);
 

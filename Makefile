@@ -10,6 +10,7 @@ endif
 
 TARGET=$(PROJ_NAME)
 SRC=./src
+ASM=./asm
 IWRAM_SRC=./iwsrc
 BIN=./bin
 INC=./include
@@ -20,11 +21,12 @@ IWRAM_C_OBJS=$(shell find $(IWRAM_SRC) -type f -iname '*.c' | sed 's-\./iwsrc-\.
 IWRAM_CXX_OBJS=$(shell find $(IWRAM_SRC) -type f -iname '*.cpp' | sed 's-\./iwsrc-\./bin-g' | sed 's/\.cpp/\.o/g')
 C_OBJS=$(ROM_C_OBJS) $(IWRAM_C_OBJS)
 CXX_OBJS=$(ROM_CXX_OBJS) $(IWRAM_CXX_OBJS)
-
+S_OBJS=$(shell find $(ASM) -type f -iname '*.s' | sed 's-\./asm-\./bin-g' | sed 's/\.s/\.o/g')
 #-------------------------------Build Definitions----------------------------------------------------------
 
 PREFIX=arm-none-eabi-
 CC=$(PREFIX)gcc
+AS=$(PREFIX)gcc
 CXX=$(PREFIX)g++
 LD=$(PREFIX)g++
 OBJ_CPY=$(PREFIX)objcopy
@@ -36,6 +38,7 @@ CFLAGS_BASE=-O2 -Wall -Wextra -fno-strict-aliasing -I$(INC)
 ROM_CFLAGS=$(CFLAGS_BASE) $(ARCH)
 IWRAM_CFLAGS=$(CFLAGS_BASE) $(IARCH) -mlong-calls
 LDFLAGS=$(ARCH) $(SPECS)
+ASFLAGS=-xassembler-with-cpp -I$(INC)
 
 .PHONY: build clean
 
@@ -52,10 +55,11 @@ $(TARGET).gba: $(TARGET).elf
 	$(OBJ_CPY) -v -O binary $(BIN)/$< $(BIN)/$@
 	-@gbafix $(BIN)/$@
 
-$(TARGET).elf: $(C_OBJS) $(CXX_OBJS)
+$(TARGET).elf: $(C_OBJS) $(CXX_OBJS) $(S_OBJS)
 	$(LD) $^ $(LDFLAGS) -o $(BIN)/$@
 
-
+$(S_OBJS): $(BIN)/%.o : $(ASM)/%.s
+	$(AS) $(ASFLAGS) -c $< -o $@
 
 $(ROM_CXX_OBJS): $(BIN)/%.o : $(SRC)/%.cpp
 	$(CXX) -c $< $(ROM_CFLAGS) -o $@

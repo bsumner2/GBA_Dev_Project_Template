@@ -5,7 +5,7 @@
 extern "C" {
 #endif  /*CXX Name Mangler Guard */
 
-#define USE_TONC_IRQ_TABLE_IMPL    0
+#define USE_TONC_IRQ_TABLE_IMPL    1
 #define OAM_COPY_USE_STRUCT_COPIES 1
 
 

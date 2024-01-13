@@ -196,6 +196,11 @@ struct Interrupt_En {
   u16_t pad0 : 2;
 };
 
+typedef struct {
+  u32_t flag;
+  IRQ_Callback_t isr_cb;
+} PACKED IRQ_Entry_t;
+
 typedef enum {
   IRQ_VBLANK,
   IRQ_HBLANK,
@@ -213,6 +218,7 @@ typedef enum {
   IRQ_GAMEPAK,
   IRQ_IDX_LIM,
 } IRQ_Idx_t;
+
 
 #ifdef __cplusplus
 }

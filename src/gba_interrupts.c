@@ -42,10 +42,8 @@ typedef struct {
 
 
 #if USE_TONC_IRQ_TABLE_IMPL
-typedef struct {
-  u32_t flag;
-  IRQ_Callback_t isr_cb;
-} PACKED IRQ_Entry_t;
+
+
 #else
 typedef IRQ_Callback_t IRQ_Entry_t;
 #endif  /* GBA Cfg options (see include/gba_cfg.h for details). */
@@ -84,9 +82,19 @@ void IRQ_Enable(IRQ_Idx_t type) {
   REG_IME = master_enable;
 }
 
+void IRQ_Disable(IRQ_Idx_t type) {
+	u16_t ime= REG_IME;
+	REG_IME= 0;
+
+	const IRQ_Src_Handle_t *src = &_internal_irq_srcs[type];
+  DEREF_REG_OFS(src->src_reg_ofs) ^= src->src_reg_flag;
+	REG_IE ^= 1<<type;
+	REG_IME= ime;
+}
+
 void IRQ_Init(IRQ_Callback_t isr_main_callback) {
   REG_IME = 0;
-  REG_ISR_MAIN = (isr_main_callback ? isr_main_callback : ISR_master_ctl);
+  REG_ISR_MAIN = (isr_main_callback ? isr_main_callback : ISR_Master_ctl);
   REG_IME = 1;
 }
 
@@ -98,12 +106,9 @@ IRQ_Callback_t IRQ_SetMaster(IRQ_Callback_t new_master_isr_cb) {
     ret = REG_ISR_MAIN;
     REG_ISR_MAIN = new_master_isr_cb;
   }
-  
   REG_IME = master_enable;
   return ret;
 }
-
-IRQ_Callback_t IRQ_Set(IRQ_Idx_t type, IRQ)
 
 
 #if USE_TONC_IRQ_TABLE_IMPL
@@ -132,6 +137,88 @@ IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
   REG_IME = master_enable;
   return ret;
 }
+
+
+IRQ_Callback_t IRQ_Set(IRQ_Idx_t type, IRQ_Callback_t cb, int opts) {
+  u16_t ime = REG_IME;
+  REG_IME = 0;
+
+  int i, slot, priority;
+  u16_t  irq_flag = 1<<type;
+  IRQ_Callback_t prev_cb = NULL;
+
+  IRQ_Entry_t *ient = _internal_isr_table;
+  const IRQ_Src_Handle_t *src = &_internal_irq_srcs[type];
+  DEREF_REG_OFS(src->src_reg_ofs) |= src->src_reg_flag;
+  REG_IE |= irq_flag;
+  
+  for (slot=0; ient[slot].flag; ++slot)
+    if (ient[slot].flag == irq_flag)
+      break;
+
+  priority = opts&(INTERRUPT_OPTS_LAST|INTERRUPT_OPTS_PRIORITY_MASK);
+
+  if (ient[slot].flag == irq_flag) {
+    if ((opts&INTERRUPT_OPTS_REPLACE) || slot == priority) {
+      prev_cb = ient[slot].isr_cb;
+      ient[slot].isr_cb = cb;
+      REG_IME = ime;
+      return prev_cb;
+    } else {
+      do {
+        ient[slot] = ient[slot+1];
+      } while (ient[slot++].flag);
+      --slot;
+    }
+
+  }
+
+  
+  if (priority < slot) {
+    for (i = slot; i > priority; --i)
+      ient[i] = ient[i-1];
+    slot = i;
+  }
+  
+  prev_cb = ient[slot].isr_cb;
+  ient[slot].isr_cb = cb;
+  ient[slot].flag = irq_flag;
+  
+  
+
+  REG_IME = ime;
+  return prev_cb;
+}
+
+
+IRQ_Callback_t IRQ_Rm(IRQ_Idx_t type) {
+  u16_t ime = REG_IME;
+  REG_IME = 0;
+
+  int i;
+  u16_t irq_flag = 1<<type;
+  IRQ_Callback_t ret;
+  IRQ_Entry_t *ient = _internal_isr_table;
+
+  const IRQ_Src_Handle_t *src = &_internal_irq_srcs[type];
+  DEREF_REG_OFS(src->src_reg_ofs) ^= src->src_reg_flag;
+
+  REG_IE ^= irq_flag;
+
+  for (i=0; ient[i].flag; ++i)
+    if (ient[i].flag == irq_flag)
+      break;
+
+  ret = ient[i].isr_cb;
+
+  for (; ient[i].flag; ++i)
+    ient[i] = ient[i+1];
+
+  REG_IME = ime;
+  return ret;
+
+}
+
 #else 
 IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
   const IRQ_Src_Handle_t* src;
@@ -146,6 +233,20 @@ IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
   REG_IE |= (1<<type);
   ret = *dest;
   *dest = cb;
+  REG_IME = master_enable;
+  return ret;
+}
+
+
+IRQ_Callback_t IRQ_Set(IRQ_Idx_t type, IRQ_Callback_t cb) {
+  IRQ_Callback_t ret = NULL;
+  IRQ_Entry_t* dest = &_internal_isr_table[type];
+  u16_t master_enable = REG_IME;
+  REG_IME = 0;
+  if (cb) {
+    ret = *dest;
+    *dest = cb;
+  }
   REG_IME = master_enable;
   return ret;
 }
