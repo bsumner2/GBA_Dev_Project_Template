@@ -111,7 +111,6 @@ IRQ_Callback_t IRQ_SetMaster(IRQ_Callback_t new_master_isr_cb) {
 }
 
 
-#if USE_TONC_IRQ_TABLE_IMPL
 IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
   u16_t master_enable = REG_IME;
   IRQ_Callback_t ret = NULL;
@@ -219,35 +218,3 @@ IRQ_Callback_t IRQ_Rm(IRQ_Idx_t type) {
 
 }
 
-#else 
-IRQ_Callback_t IRQ_Add(IRQ_Idx_t type, IRQ_Callback_t cb) {
-  const IRQ_Src_Handle_t* src;
-  IRQ_Entry_t* dest;
-  IRQ_Callback_t ret = NULL;
-  u16_t master_enable = REG_IME;
-
-  REG_IME = 0;
-  dest = &_internal_isr_table[type];
-  src = &_internal_irq_srcs[type];
-  DEREF_REG_OFS(src->src_reg_ofs) |= src->src_reg_flag;
-  REG_IE |= (1<<type);
-  ret = *dest;
-  *dest = cb;
-  REG_IME = master_enable;
-  return ret;
-}
-
-
-IRQ_Callback_t IRQ_Set(IRQ_Idx_t type, IRQ_Callback_t cb) {
-  IRQ_Callback_t ret = NULL;
-  IRQ_Entry_t* dest = &_internal_isr_table[type];
-  u16_t master_enable = REG_IME;
-  REG_IME = 0;
-  if (cb) {
-    ret = *dest;
-    *dest = cb;
-  }
-  REG_IME = master_enable;
-  return ret;
-}
-#endif

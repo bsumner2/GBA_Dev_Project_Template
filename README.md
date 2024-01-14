@@ -44,8 +44,10 @@ static const size_t lilen = sizeof(long int);  // x64 gcc: 8 | ARM32 gcc: 4
 ```
 
 ## TODO List
-
-1. Implement my own ISR Switchboard.
+1. Implement GBA sound.
+    - Implement DMG (Legacy Gameboy Classic sound ctrl registers interfacing)
+    - Implement DSOUND (Direct sound ctrl registers interfacing)
+2. Implement my own ISR Switchboard.
     - So I have shamelessly, "borrowed," the Libtonc IRQ handling implementation
         because I loved the whole switchboard design of it. I think it was a very 
         clever design, and I would love to expand on it; however, as of the current 

@@ -173,12 +173,12 @@ struct Timer_Ctl {
   u16_t interrupt_flag : 1;
   u16_t enable_flag : 1;
   u16_t pad1 : 8;
-};
+} ALIGN(2);
 
 struct Timer_Hndl {
-  Timer_Controller_t controller;
   u16_t data;
-};
+  Timer_Controller_t controller;
+} ALIGN(2);
 
 
 typedef void (*IRQ_Callback_t)(void);
@@ -218,6 +218,29 @@ typedef enum {
   IRQ_GAMEPAK,
   IRQ_IDX_LIM,
 } IRQ_Idx_t;
+
+typedef struct snd_dsound_ctl DSound_Ctl_t;
+
+struct snd_dsound_ctl {
+  u16_t vol_lvl : 2;
+  u16_t a_lvl : 1, b_lvl : 1;
+  u16_t pad0 : 4;
+  u16_t a_right_enable : 1, a_left_enable : 1;
+  u16_t a_timer_no : 1, a_fifo_reset : 1;
+  u16_t b_right_enable : 1, b_left_enable : 1;
+  u16_t b_timer_no : 1, b_fifo_reset : 1;
+} ALIGN(2);
+
+
+
+
+
+
+
+
+// GBA Direct Sound
+
+
 
 
 #ifdef __cplusplus

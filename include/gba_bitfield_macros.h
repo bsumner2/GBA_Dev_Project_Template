@@ -1,6 +1,8 @@
 #ifndef _GBA_BITFIELD_MACROS_H_
 #define _GBA_BITFIELD_MACROS_H_
 
+#include "gba_def.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif  /* CXX Name Mangler guard */
@@ -142,10 +144,10 @@ typedef enum {
 #define DMA_ADJ_FIXED       0x0002
 #define DMA_ADJ_DEST_RELOAD 0x0003
 
-#define DMA_IMMEDIATE   0x0000
-#define DMA_ON_VBLANK   0x0001
-#define DMA_ON_HBLANK   0x0002
-#define DMA_ON_REFRESH  0x0003
+#define DMA_IMMEDIATE       0x0000
+#define DMA_ON_VBLANK       0x0001
+#define DMA_ON_HBLANK       0x0002
+#define DMA_SYNC_TO_TIMER   0x0003
 
 #define DMA_TRANSFER_COUNT_MASK 0x0000FFFF
 #define DMA_DEST_ADJ_MASK       0x00600000
@@ -204,6 +206,21 @@ typedef enum {
 #define INTERRUPT_OPTS_REPLACE 0x0080
 #define INTERRUPT_OPTS_PRIORITY_MASK 0x003F
 #define INTERRUPT_OPTS_DEFAULT (INTERRUPT_OPTS_LAST|INTERRUPT_OPTS_REPLACE)
+
+
+#define SNDSTAT_MASTER_ENABLE 0x0080
+#define SNDSTAT_SQR1_IS_ENABLED_MASK  0x0001
+#define SNDSTAT_SQR2_IS_ENABLED_MASK  0x0002
+#define SNDSTAT_WAVE_IS_ENABLED_MASK  0x0004
+#define SNDSTAT_NOISE_IS_ENABLED_MASK 0x0008
+
+#define SNDSTAT_CHANNEL_ENABLED(dmg_channel) \
+  (SNDSTAT_##dmg_channel##_IS_ENABLED_MASK&REG_SND_STAT)
+
+#define MASTER_SOUND_ENABLE do REG_SND_STAT |= SNDSTAT_MASTER_ENABLE; while(0)
+
+
+
 #ifdef __cplusplus
 }
 #endif  /* CXX Name Mangler guard */

@@ -68,6 +68,9 @@ extern "C" {
 #define REG_DMA ((volatile DMA_Handle_t*) (MEM_IO + 0x00B0))
 
 #define REG_TM ((volatile Timer_Handle_t*) (MEM_IO + 0x0100))
+#define REG_TM_CNT ((volatile Timer_Controller_t*) (MEM_IO + 0x0102))
+#define REG_TM_DATA ((vu16_t*) (MEM_IO + 0x0100))
+
 
 #define REG_IME *((vu16_t*) (MEM_IO + 0x0208))
 
@@ -80,6 +83,12 @@ extern "C" {
 #define MEM_ISR_CALLBACK_ADDR 0x03007FFC
 
 #define REG_ISR_MAIN *((IRQ_Callback_t*) (MEM_BIOS_CTLS + 0x7FFC))
+
+#define REG_SND_STAT *((vu16_t*) (MEM_IO + 0x0084))
+#define REG_SND_DS_CNT *((volatile DSound_Ctl_t*) (MEM_IO + 0x0082))
+
+#define FIFO_A_BUF ((vu8_t*) (MEM_IO + 0x00A0))
+#define FIFO_B_BUF ((vu8_t*) (MEM_IO + 0x00A4))
 
 
 #ifdef __cplusplus

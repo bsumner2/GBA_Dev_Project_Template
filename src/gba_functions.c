@@ -158,3 +158,14 @@ void* DMA_Memcpy2(void* dest, const void* src, u32_t dma_slot,
   return dest;
 }
 
+
+void setup_timer(int timer, Timer_Handle_t *hndl) {
+  if (!hndl) {
+    return;
+  }
+  timer &= 3;
+  REG_TM[timer] = *hndl;
+  /*REG_TM_DATA[timer] = hndl->data;
+  REG_TM_CNT[timer] = hndl->controller;*/
+  
+}

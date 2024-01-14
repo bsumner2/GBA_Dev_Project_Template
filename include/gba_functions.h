@@ -90,6 +90,8 @@ void IRQ_Enable(IRQ_Idx_t);
 void IRQ_Disable(IRQ_Idx_t);
 
 
+void setup_timer(int timer, Timer_Handle_t *hndl);
+
 
 
 

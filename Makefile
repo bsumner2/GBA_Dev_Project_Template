@@ -34,9 +34,15 @@ OBJ_CPY=$(PREFIX)objcopy
 ARCH=-mthumb-interwork -mthumb
 IARCH=-mthumb-interwork -marm
 SPECS=-specs=gba.specs
+
 CFLAGS_BASE=-O2 -Wall -Wextra -fno-strict-aliasing -I$(INC)
-ROM_CFLAGS=$(CFLAGS_BASE) $(ARCH)
-IWRAM_CFLAGS=$(CFLAGS_BASE) $(IARCH) -mlong-calls
+
+ROM_CFLAGS=$(CFLAGS_BASE) $(ARCH) -std=c99
+IWRAM_CFLAGS=$(CFLAGS_BASE) $(IARCH) -std=c99 -mlong-calls
+
+ROM_CXXFLAGS=$(CFLAGS_BASE) $(ARCH) -std=c++20
+IWRAM_CXXFLAGS=$(CFLAGS_BASE) $(IARCH) -std=c++20 -mlong-calls
+
 LDFLAGS=$(ARCH) $(SPECS)
 ASFLAGS=-xassembler-with-cpp -I$(INC)
 
@@ -62,7 +68,7 @@ $(S_OBJS): $(BIN)/%.o : $(ASM)/%.s
 	$(AS) $(ASFLAGS) -c $< -o $@
 
 $(ROM_CXX_OBJS): $(BIN)/%.o : $(SRC)/%.cpp
-	$(CXX) -c $< $(ROM_CFLAGS) -o $@
+	$(CXX) -c $< $(ROM_CXXFLAGS) -o $@
 
 $(ROM_C_OBJS): $(BIN)/%.o : $(SRC)/%.c
 	$(CC) -c $< $(ROM_CFLAGS) -o $@
@@ -71,7 +77,7 @@ $(IWRAM_C_OBJS): $(BIN)/%.o : $(IWRAM_SRC)/%.c
 	$(CC) -c $< $(IWRAM_CFLAGS) -o $@
 
 $(IWRAM_CXX_OBJS): $(BIN)/%.o : $(IWRAM_SRC)/%.cpp
-	$(CC) -c $< $(IWRAM_CFLAGS) -o $@
+	$(CC) -c $< $(IWRAM_CXXFLAGS) -o $@
 
 #-------------------------------Build----------------------------------------------------------------------
 clean: 
