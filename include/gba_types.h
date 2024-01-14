@@ -232,10 +232,92 @@ struct snd_dsound_ctl {
 } ALIGN(2);
 
 
+typedef struct snd_dmg_ctl DMG_Snd_Ctl_t;
+typedef struct snd1_sweep_ctl Snd1_Sweep_Ctl_t;
+
+typedef struct snd_freq_ctl Snd_Freq_Ctl_t;
+
+typedef struct snd_bank_ctl Snd3_Bank_Ctl_t;
+typedef struct snd_wav_ctl Snd3_Wave_Ctl_t;
+
+typedef struct snd_sq_ctl Snd_Square_Ctl_t;
+typedef struct snd_envelope_ctl Snd4_Noise_Ctl_t;
+typedef struct snd_envelope_ctl Snd_Envelope_Ctl_t;
+typedef union snd_shared_env_ctl Snd_SqN_Ctl_t;
+
+typedef struct snd_ns_params Snd4_Param_Ctl_t;
+
+struct snd_dmg_ctl {
+  u16_t left_vol :3;
+  u16_t pad0 : 1;
+  u16_t right_vol : 3;
+  u16_t pad1 : 1;
+  u16_t square_left1 : 1, square_left2 : 1;
+  u16_t wave_left : 1, noise_left : 1;
+  u16_t square_right1 : 1, square_right2 : 1;
+  u16_t wave_right : 1, noise_right : 1;
+} ALIGN(2);
+
+struct snd1_sweep_ctl {
+  u16_t shift_amt : 3;
+  u16_t increasing : 1;
+  u16_t step_time : 3;
+  u16_t pad : 9;
+} ALIGN(2);
 
 
+struct snd_envelope_ctl {
+  u16_t len : 6;
+  u16_t pad0 : 2;
+  u16_t env_step_time : 3;
+  u16_t env_inc : 1;
+  u16_t env_init_val : 4;
+} ALIGN(2);
+
+struct snd_sq_ctl {
+  u16_t len : 6;
+  u16_t duty_cycle : 2;
+  u16_t env_step_time : 3;
+  u16_t env_inc : 1;
+  u16_t env_init_val : 4;
+} ALIGN(2);
+
+struct snd_freq_ctl {
+  u16_t rate : 11;
+  u16_t pad0 : 3;
+  u16_t timed : 1;
+  u16_t reset : 1;
+} ALIGN(2);
 
 
+struct snd3_bank_ctl {
+  u16_t pad0 : 5;
+  u16_t bank_mode : 1;
+  u16_t bank_idx : 1;
+  u16_t enable : 1;
+  u16_t pad1 : 8;
+} ALIGN(2);
+
+struct snd_wav_ctl {
+  u16_t len : 8;
+  u16_t pad0 : 5;
+  u16_t vol : 3;
+} ALIGN(2);
+
+union snd_shared_env_ctl {
+  Snd_Envelope_Ctl_t shared_opts;
+  Snd4_Noise_Ctl_t noise_opts;
+  Snd_Square_Ctl_t square_opts;
+} ALIGN(2);
+
+struct snd_ns_params {
+  u16_t divider_freq : 3;
+  u16_t stage_ct_flag : 1;
+  u16_t pre_step_freq : 4;
+  u16_t pad0 : 6;
+  u16_t timed : 1;
+  u16_t reset : 1;
+} ALIGN(2);
 
 
 // GBA Direct Sound
