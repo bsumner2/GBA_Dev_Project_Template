@@ -219,6 +219,52 @@ typedef enum {
 
 #define MASTER_SOUND_ENABLE do REG_SND_STAT |= SNDSTAT_MASTER_ENABLE; while(0)
 
+#define SND_DMG_RATIO_025 0
+#define SND_DMG_RATIO_050 1
+#define SND_DMG_RATIO_100 2
+
+
+#define SND_SQUARE_DUTY_CYCLE_1_8TH             0
+#define SND_SQUARE_DUTY_CYCLE_ONE_EIGHTH        0
+#define SND_SQUARE_DUTY_CYCLE_1_4TH             1
+#define SND_SQUARE_DUTY_CYCLE_ONE_QUARTER       1
+#define SND_SQUARE_DUTY_CYCLE_1_2ND             2
+#define SND_SQUARE_DUTY_CYCLE_ONE_HALF          2
+#define SND_SQUARE_DUTY_CYCLE_3_4THS            3
+#define SND_SQUARE_DUTY_CYCLE_THREE_QUARTERS    3
+
+#define SND_WAVE_VOL_LVL_MUTE 0
+#define SND_WAVE_VOL_LVL_100  1
+#define SND_WAVE_VOL_LVL_075  4
+#define SND_WAVE_VOL_LVL_050  2
+#define SND_WAVE_VOL_LVL_025  3
+
+#define SND_NOISE_CLOCK_FACTOR_FREQ_DOUBLE  0
+#define SND_NOISE_CLOCK_FACTOR_FREQ_NONE    1
+#define SND_NOISE_CLOCK_FACTOR_FREQ_DENOMINATOR(n) (n&7)
+
+#define SND_NOISE_COUNTER_STAGES_15 0
+#define SND_NOISE_COUNTER_STAGES_7  1
+
+#define SND_NOISE_PRE_STEP_DIV_EXP(n) (n>13 ? 0 : n)
+
+
+
+// Listing 18.1: a sound-rate macro and friends
+
+typedef enum 
+{
+    NOTE_C=0, NOTE_CIS, NOTE_D,   NOTE_DIS, 
+    NOTE_E,   NOTE_F,   NOTE_FIS, NOTE_G, 
+    NOTE_GIS, NOTE_A,   NOTE_BES, NOTE_B
+} Snd_Note_Idx_t;
+
+// Rates for traditional notes in octave +5
+extern const u32_t _G_snd_rates[12];
+#define SND_RATE(note, oct) ( 2048-(_G_snd_rates[note]>>(4+(oct))) )
+
+
+
 
 
 #ifdef __cplusplus

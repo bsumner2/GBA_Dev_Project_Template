@@ -222,7 +222,7 @@ typedef enum {
 typedef struct snd_dsound_ctl DSound_Ctl_t;
 
 struct snd_dsound_ctl {
-  u16_t vol_lvl : 2;
+  u16_t dmg_vol_ratio : 2;
   u16_t a_lvl : 1, b_lvl : 1;
   u16_t pad0 : 4;
   u16_t a_right_enable : 1, a_left_enable : 1;
@@ -235,17 +235,17 @@ struct snd_dsound_ctl {
 typedef struct snd_dmg_ctl DMG_Snd_Ctl_t;
 typedef struct snd1_sweep_ctl Snd1_Sweep_Ctl_t;
 
-typedef struct snd_freq_ctl Snd_Freq_Ctl_t;
+typedef struct snd_sw_freq_ctl Snd_SqW_Freq_Ctl_t;
 
-typedef struct snd_bank_ctl Snd3_Bank_Ctl_t;
-typedef struct snd_wav_ctl Snd3_Wave_Ctl_t;
+typedef struct snd3_bank_ctl Snd3_Bank_Ctl_t;
+typedef struct snd3_wav_ctl Snd3_Wave_Ctl_t;
 
 typedef struct snd_sq_ctl Snd_Square_Ctl_t;
-typedef struct snd_envelope_ctl Snd4_Noise_Ctl_t;
-typedef struct snd_envelope_ctl Snd_Envelope_Ctl_t;
-typedef union snd_shared_env_ctl Snd_SqN_Ctl_t;
+typedef struct snd4_noise_ctl Snd4_Noise_Ctl_t;
 
-typedef struct snd_ns_params Snd4_Param_Ctl_t;
+typedef union snd_freq_ctl Snd_Freq_Ctl_t;
+
+typedef struct snd4_noise_freq_ctl Snd4_Noise_Freq_Ctl_t;
 
 struct snd_dmg_ctl {
   u16_t left_vol :3;
@@ -266,7 +266,7 @@ struct snd1_sweep_ctl {
 } ALIGN(2);
 
 
-struct snd_envelope_ctl {
+struct snd4_noise_ctl {
   u16_t len : 6;
   u16_t pad0 : 2;
   u16_t env_step_time : 3;
@@ -282,7 +282,7 @@ struct snd_sq_ctl {
   u16_t env_init_val : 4;
 } ALIGN(2);
 
-struct snd_freq_ctl {
+struct snd_sw_freq_ctl {
   u16_t rate : 11;
   u16_t pad0 : 3;
   u16_t timed : 1;
@@ -298,19 +298,13 @@ struct snd3_bank_ctl {
   u16_t pad1 : 8;
 } ALIGN(2);
 
-struct snd_wav_ctl {
+struct snd3_wav_ctl {
   u16_t len : 8;
   u16_t pad0 : 5;
   u16_t vol : 3;
 } ALIGN(2);
 
-union snd_shared_env_ctl {
-  Snd_Envelope_Ctl_t shared_opts;
-  Snd4_Noise_Ctl_t noise_opts;
-  Snd_Square_Ctl_t square_opts;
-} ALIGN(2);
-
-struct snd_ns_params {
+struct snd4_noise_freq_ctl {
   u16_t divider_freq : 3;
   u16_t stage_ct_flag : 1;
   u16_t pre_step_freq : 4;
@@ -319,7 +313,10 @@ struct snd_ns_params {
   u16_t reset : 1;
 } ALIGN(2);
 
-
+union snd_freq_ctl {
+  Snd_SqW_Freq_Ctl_t dmg_square, dmg_wave;
+  Snd4_Noise_Freq_Ctl_t dmg_noise;
+};
 // GBA Direct Sound
 
 

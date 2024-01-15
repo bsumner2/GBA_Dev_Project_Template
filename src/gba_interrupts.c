@@ -67,8 +67,9 @@ static const IRQ_Src_Handle_t _internal_irq_srcs[] = {
   {0,0}  // Null terminator type beat? Idk.
 };
 
+#define MEM_IO_UPTR 0x04000000ULL
 #define DEREF_REG_ADDR(address) (*((vu16_t*) (address)))
-#define DEREF_REG_OFS(offset) (*((vu16_t*) (MEM_IO + offset)))
+#define DEREF_REG_OFS(offset) (*((vu16_t*) (MEM_IO_UPTR + offset)))
 
 void IRQ_Enable(IRQ_Idx_t type) {
   const IRQ_Src_Handle_t* src;
@@ -77,7 +78,7 @@ void IRQ_Enable(IRQ_Idx_t type) {
   REG_IME = 0;
 
   src = &_internal_irq_srcs[type];
-  DEREF_REG_ADDR(MEM_IO+src->src_reg_ofs) |= src->src_reg_flag;
+  DEREF_REG_OFS(src->src_reg_ofs) |= src->src_reg_flag;
   REG_IE |= 1U<<type;
   REG_IME = master_enable;
 }

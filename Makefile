@@ -55,7 +55,12 @@ ASFLAGS=-xassembler-with-cpp -I$(INC)
 test: clean build
 	mgba-qt $(BIN)/$(TARGET).gba
 
-build: $(TARGET).gba
+build: folders_exist $(TARGET).gba
+
+folders_exist: $(IWRAM_SRC) $(SRC) $(ASM) $(INC) $(BIN)
+
+$(BIN) $(INC) $(IWRAM_SRC) $(SRC) $(ASM):
+	mkdir -p $@
 
 $(TARGET).gba: $(TARGET).elf
 	$(OBJ_CPY) -v -O binary $(BIN)/$< $(BIN)/$@

@@ -94,6 +94,17 @@ void setup_timer(int timer, Timer_Handle_t *hndl);
 
 
 
+void DMG_Channel_Enable(u16_t channel, u16_t l_enable, u16_t r_enable);
+
+void DMG_Set_Volume_Left(u16_t lvl);
+void DMG_Set_Volume_Right(u16_t lvl);
+
+void DMG_Set_Volume(u16_t lvl);
+void DMG_Set_Volume_Ratio(u16_t ratio);
+
+void Play_Note(Snd_Note_Idx_t note, int octave);
+void DMG_Square1_Init(u16_t duty_cycle, bool_t envelope_increasing, u16_t len,
+    u16_t init_val);
 
 #ifdef __cplusplus
 }

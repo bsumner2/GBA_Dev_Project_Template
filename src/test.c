@@ -4,24 +4,24 @@
 #include "gba_types.h"
 #include <stddef.h>
 
-#if 1
+#if 0
 
 #include "porkys_porkies.h"
 
 void setup_timer(int timer, Timer_Handle_t *hndl);
 
 void setup_sounda(void) {
-  REG_SND_STAT = SNDSTAT_MASTER_ENABLE;
+  MASTER_SOUND_ENABLE;
   REG_DISPLAY_CNT_SET_MODES(DCNT_V_MODE3, DCNT_BG_MODE2);
   DSound_Ctl_t ctl = (DSound_Ctl_t){
-    .vol_lvl = 2, .a_lvl = 1, .a_timer_no = 0, .a_left_enable = 1, .a_right_enable = 1,
+    .dmg_vol_lvl = 2, .a_lvl = 1, .a_timer_no = 0, .a_left_enable = 1, .a_right_enable = 1,
       .a_fifo_reset = 1,
   };
   REG_SND_DS_CNT = ctl;
 }
 
 int main(void) {
-
+  
   setup_sounda();
   VIDEO_BUF[0] = 0x7fff;
   DMA_Memcpy2((void*)FIFO_A_BUF, &porkys_porkies, 1, 0, 
@@ -34,6 +34,7 @@ int main(void) {
   timer_hndl.controller.interrupt_flag = 0;
   timer_hndl.controller.cascade_mode_flag = 0;
   timer_hndl.controller.frequency = 0;
+  //SET_RESAMPLE_RES;
   setup_timer(0, &timer_hndl);
 
   int i = 0;
@@ -42,6 +43,22 @@ int main(void) {
   } 
 }
 
+#elif 1
+int main(void) {
+  MASTER_SOUND_ENABLE;
+  DMG_Channel_Enable(1, true, true);
+  DMG_Set_Volume(7);
+  DMG_Set_Volume_Ratio(SND_DMG_RATIO_100); 
+
+  DMG_Square1_Init(SND_SQUARE_DUTY_CYCLE_1_2ND, false, 7, 12);
+
+  while (1) {
+    if (KEY_PRESSED(A)) {
+      Play_Note(NOTE_A, 5);
+    }
+  }
+  
+}
 
 #else
 
