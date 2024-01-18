@@ -45,6 +45,10 @@ STAT_INLN void ObjAttr_SetPaletteBankIdx(Obj_Attr_t* obj, u16_t palbank_idx) {
   obj->attr2.pal_idx = palbank_idx; 
 }
 
+STAT_INLN void Serial_MP_Start(void) {
+  static Serial_Ctl_t ctl = { .multi = { .start_bit = 1 } };
+  REG_SERIAL_IOCNT |= ctl.raw_bits;
+}
 
 #ifdef __cplusplus
 }

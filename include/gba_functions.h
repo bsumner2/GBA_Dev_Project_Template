@@ -19,7 +19,7 @@ extern "C" {
  * @params Variadic: List of all mode flags you would like to set.
  * */
 void _Internal_DisplayControl_SetModes(u32_t mode1, ...);
-#define REG_DISPLAY_CNT_SET_MODES(...) \
+#define DCNT_SET_MODES(...) \
   _Internal_DisplayControl_SetModes(__VA_ARGS__, 0xFFFFFFFF)
 
 /** 
@@ -105,6 +105,8 @@ void DMG_Set_Volume_Ratio(u16_t ratio);
 void Play_Note(Snd_Note_Idx_t note, int octave);
 void DMG_Square1_Init(u16_t duty_cycle, bool_t envelope_increasing, u16_t len,
     u16_t init_val);
+
+bool_t Serial_MP_Setup(bool_t initialize, bool_t *is_parent);
 
 #ifdef __cplusplus
 }

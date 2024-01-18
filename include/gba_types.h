@@ -317,8 +317,69 @@ union snd_freq_ctl {
   Snd_SqW_Freq_Ctl_t dmg_square, dmg_wave;
   Snd4_Noise_Freq_Ctl_t dmg_noise;
 };
-// GBA Direct Sound
 
+// GBA Serial Comms
+
+typedef union serial_ctl Serial_Ctl_t;
+
+typedef struct serial_normal_mode Serial_Normal_Ctl_t;
+typedef struct serial_multi_mode Serial_Multi_Ctl_t;
+typedef struct serial_uart_mode Serial_UART_Ctl_t;
+
+
+
+struct serial_normal_mode {
+  u16_t shift_clock_internal : 1;
+  u16_t internal_shift_clock_speed : 1;
+  u16_t SI_state : 1;
+  u16_t SO_inactive_high : 1;
+  u16_t pad0 : 3;
+  u16_t start_bit : 1;
+  u16_t pad1 : 4;
+  u16_t transfer_len32 : 1;
+  u16_t pad2 : 1;
+  u16_t IRQ_enable : 1;
+  u16_t pad3 : 1;
+
+
+};
+
+
+struct serial_uart_mode {
+  u16_t baud_rate : 2;
+  u16_t CTS_flag : 1;
+  u16_t parity : 1;
+  u16_t send_data_flag : 1;
+  u16_t recv_data_flag : 1;
+  u16_t err_flag : 1;
+  u16_t data_len : 1;
+  u16_t FIFO_enable : 1;
+  u16_t parity_enable : 1;
+  u16_t send_enable : 1;
+  u16_t recv_enable : 1;
+  u16_t pad0 : 2;
+  u16_t IRQ_enable : 1;
+  u16_t pad1 : 1;
+};
+
+struct serial_multi_mode {
+  u16_t baud_rate : 2;
+  u16_t SI_terminal : 1, SD_terminal : 1;
+  u16_t mp_ID : 2;
+  u16_t mp_error : 1;
+  u16_t start_bit : 1;
+  u16_t pad0 : 6;
+  u16_t IRQ_enable : 1;
+  u16_t pad1 : 1;
+};
+
+
+union serial_ctl {
+  u16_t raw_bits;
+  Serial_Normal_Ctl_t normal;
+  Serial_Multi_Ctl_t multi;
+  Serial_UART_Ctl_t UART;
+};
 
 
 

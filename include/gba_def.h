@@ -122,6 +122,22 @@ extern "C" {
 #define REG_WAVERAM ((vu32_t*) (MEM_IO + 0x0090))
 
 #define REG_SND4_CNT *((volatile Snd4_Noise_Ctl_t*) (MEM_IO + 0x0078))
+
+
+
+
+
+#define REG_SERIAL_RCNT *((vu16_t*) (MEM_IO+0x0134))
+#define REG_SERIAL_IOCNT *((vu16_t*) (MEM_IO + 0x0128))
+
+#define REG_SIOCNT *((volatile Serial_Ctl_t*) (MEM_IO + 0x0128))
+
+#define SIO_NORMAL_DATA8 *((vu8_t*) (MEM_IO + 0x012A))
+#define SIO_NORMAL_DATA32 *((vu32_t*) (MEM_IO + 0x0120))
+#define SIO_NORMAL_DATA16(slot_no) ((vu16_t*) (MEM_IO + 0x0120 + (slot_no&1)))
+
+#define SIO_MULTI_SEND *((vu16_t*) (MEM_IO + 0x012A))
+#define SIO_MULTI_SEND *((vu16_t*) (MEM_IO + 0x012A))
 #ifdef __cplusplus
 }
 #endif  /* extern "C" name mangler guard */

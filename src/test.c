@@ -12,7 +12,7 @@ void setup_timer(int timer, Timer_Handle_t *hndl);
 
 void setup_sounda(void) {
   MASTER_SOUND_ENABLE;
-  REG_DISPLAY_CNT_SET_MODES(DCNT_V_MODE3, DCNT_BG_MODE2);
+  DCNT_SET_MODES(DCNT_V_MODE3, DCNT_BG_MODE2);
   DSound_Ctl_t ctl = (DSound_Ctl_t){
     .dmg_vol_lvl = 2, .a_lvl = 1, .a_timer_no = 0, .a_left_enable = 1, .a_right_enable = 1,
       .a_fifo_reset = 1,
@@ -43,8 +43,7 @@ int main(void) {
   } 
 }
 
-#elif 1
-
+#elif 0
 int d_major[] = {
   NOTE_C,
   NOTE_D,
@@ -77,6 +76,14 @@ int main(void) {
   }
   
 }
+#elif 1
+int main(void) {
+  DCNT_SET_MODES(DCNT_V_MODE3, DCNT_BG_MODE2);
+  while (1) {
+    if (KEY_PRESSED(key)
+  }
+  
+} 
 
 #else
 
@@ -101,7 +108,7 @@ void Mode4_Plot(int x, int y, u8_t pal_id) {
 
 
 void setup_timer_test_dpy(void) {
-  REG_DISPLAY_CNT_SET_MODES(DCNT_V_MODE4, DCNT_BG_MODE2);
+  DCNT_SET_MODES(DCNT_V_MODE4, DCNT_BG_MODE2);
   u32_t pal_idx = 0;
   for (int i = 0; i < SCREEN_HEIGHT; ++i)
   for (int j = 0; j < SCREEN_WIDTH; ++j)
