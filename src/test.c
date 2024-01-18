@@ -44,6 +44,17 @@ int main(void) {
 }
 
 #elif 1
+
+int d_major[] = {
+  NOTE_C,
+  NOTE_D,
+  NOTE_E,
+  NOTE_F,
+  NOTE_G,
+  NOTE_A,
+  NOTE_B,
+};
+
 int main(void) {
   MASTER_SOUND_ENABLE;
   DMG_Channel_Enable(1, true, true);
@@ -51,10 +62,17 @@ int main(void) {
   DMG_Set_Volume_Ratio(SND_DMG_RATIO_100); 
 
   DMG_Square1_Init(SND_SQUARE_DUTY_CYCLE_1_2ND, false, 7, 12);
-
+  int curr = 0;
+  int octave = -1;
   while (1) {
     if (KEY_PRESSED(A)) {
-      Play_Note(NOTE_A, 5);
+      while (KEY_PRESSED(A)) continue;
+      if (!(curr&7))
+        ++octave;
+      Snd_Note_Idx_t current = d_major[curr++&7];
+
+      // TODO figure out why tf starting note just turns to scheisse
+      // after next octave
     }
   }
   
