@@ -381,6 +381,10 @@ union serial_ctl {
   Serial_UART_Ctl_t UART;
 };
 
+typedef struct {
+  u16_t data[4];
+  u16_t player_id;
+} Serial_MP_Rsp_t;
 
 
 #ifdef __cplusplus

@@ -134,10 +134,13 @@ extern "C" {
 
 #define SIO_NORMAL_DATA8 *((vu8_t*) (MEM_IO + 0x012A))
 #define SIO_NORMAL_DATA32 *((vu32_t*) (MEM_IO + 0x0120))
-#define SIO_NORMAL_DATA16(slot_no) ((vu16_t*) (MEM_IO + 0x0120 + (slot_no&1)))
+#define SIO_NORMAL_DATA16(slot_no) *((vu16_t*) (MEM_IO + 0x0120 + ((slot_no&1)<<1)))
 
 #define SIO_MULTI_SEND *((vu16_t*) (MEM_IO + 0x012A))
-#define SIO_MULTI_SEND *((vu16_t*) (MEM_IO + 0x012A))
+
+#define SIO_MULTI(slot) *((vu16_t*) (MEM_IO + 0x0120 + ((slot&3)<<1)))
+
+
 #ifdef __cplusplus
 }
 #endif  /* extern "C" name mangler guard */

@@ -3,8 +3,6 @@
 #include "gba_functions.h"
 #include "gba_types.h"
 
-
-
 bool_t Serial_MP_Setup(bool_t initialize, bool_t *is_parent) {
 
   Serial_Ctl_t sctl = REG_SIOCNT;
@@ -19,7 +17,16 @@ bool_t Serial_MP_Setup(bool_t initialize, bool_t *is_parent) {
   if (is_parent)
     *is_parent = sctl.multi.SI_terminal;
   return sctl.multi.SD_terminal;
-
 }
+
+Serial_MP_Rsp_t Serial_MP_Get_Response(void) {
+  Serial_MP_Rsp_t data;
+  for (int i = 0; i < 4; ++i)
+    data.data[i] = SIO_MULTI(i);
+  Serial_Ctl_t sctl = REG_SIOCNT;
+  data.player_id = sctl.multi.mp_ID;
+  return data;
+}
+
 
 

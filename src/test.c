@@ -1,8 +1,11 @@
 #include "gba_bitfield_macros.h"
 #include "gba_def.h"
 #include "gba_functions.h"
+#include "gba_inlines.h"
+#include "gba_serial.h"
 #include "gba_types.h"
 #include <stddef.h>
+#include "gba_stdio.h"
 
 #if 0
 
@@ -77,13 +80,44 @@ int main(void) {
   
 }
 #elif 1
+bool_t is_host = false;
 int main(void) {
   DCNT_SET_MODES(DCNT_V_MODE3, DCNT_BG_MODE2);
   while (1) {
-    if (KEY_PRESSED(key)
+    if (KEY_PRESSED(A)) {
+      while (KEY_PRESSED(A)) 
+        continue;
+      Mode3_printf(0,64, 0x7FFF, "Initializing multiplayer.\n");
+      if (!Serial_MP_Setup(true, &is_host))
+        while (!Serial_MP_Setup(false, &is_host));
+      break;
+    }
   }
-  
-} 
+
+  Mode3_printf(0, 72, 0x7fff, "Successful.\nIs Host: %s\n", is_host?"True":"False");
+  Serial_MP_Rsp_t response;
+  Serial_Ctl_t ctl;
+  if (is_host) {
+    Serial_MP_SetData(0x7fff);
+    Serial_MP_StartTransfer();
+    while ((ctl.multi.start_bit));
+    REG_SIOCNT = ctl;
+
+  }
+  else {
+    Serial_MP_SetData(RED_MASK);
+    while ((ctl.multi.start_bit));
+    REG_SIOCNT = ctl;
+  }
+
+  response = Serial_MP_Get_Response();
+
+  Mode3_printf(0, 5, 0x7fff, "Player ID: %d\nIs Master: %s\n", response.player_id, is_host?"True":"False");
+  VIDEO_BUF[0] = response.data[0];
+  VIDEO_BUF[1] = response.data[1];
+  while (1);
+}
+
 
 #else
 

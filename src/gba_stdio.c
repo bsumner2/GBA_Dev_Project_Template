@@ -58,6 +58,75 @@ static u16_t parse_color(char **buf_ptr) {
 }
 
 
+bool_t Mode3_vprintf(u32_t x, u32_t y, u16_t color, const char *restrict fmt,
+    va_list args) {
+  if (!fmt)
+    return false;
+  if (y+8 > SCREEN_HEIGHT)
+    return false;
+
+  size_t len;
+  u16_t *vbuf_row;
+  u8_t *cur_glyph;
+  char *cursor;
+  const int startx = x;
+  u16_t col = color;
+  char tmp;
+  u8_t glyphrow;
+
+  {
+    va_list args_copy;
+    va_copy(args_copy, args);
+    len = vsnprintf(NULL, 0, fmt, args_copy);
+    va_end(args_copy);
+  }
+
+  char buf[len+1];
+  vsnprintf(buf, len + 1, fmt, args);
+  if (buf[len]) 
+    buf[len] = '\0';
+
+  cursor = buf;
+  while ((tmp = *cursor++)) {
+    if (tmp < reduced_ascii_ASCII_OFS) {
+      if (tmp=='\n') {
+        y+=8;
+        x = startx;
+        if (y+8 > SCREEN_HEIGHT)
+          return false;
+      } else if (tmp == ESC_FLAG_CHAR) {
+        if ((col = parse_color(&cursor)) & PARSE_ESC_CLR_ERROR_FLAG)
+          return false;
+      }
+      continue;
+    }
+
+    if (x+8 > SCREEN_WIDTH) {
+      y+=8;
+      x = startx;
+      if (y+8 > SCREEN_HEIGHT)
+        return false;
+    }
+
+    cur_glyph = (u8_t*)ascii_font[tmp - reduced_ascii_ASCII_OFS];
+    for (int i = 0; i < 8; ++i) {
+      glyphrow = cur_glyph[i];
+      vbuf_row = (y+i)*SCREEN_WIDTH + x + VIDEO_BUF;
+      for (int j = 0; j < 8; ++j) {
+        if (!(glyphrow&(0x80>>j)))
+          continue;
+        else
+          vbuf_row[j] = col;
+      }
+    }
+    x += 8;
+  }
+
+  return true;
+  
+   
+}
+
 
 
 /** 
@@ -105,31 +174,8 @@ bool_t Mode3_printf(u32_t x, u32_t y, u16_t color, const char *restrict fmt,
         if (y+8 > SCREEN_HEIGHT)
           return false;
       } else if (tmp == ESC_FLAG_CHAR) {
-#if 0
-        int slen = 0, idx = 0;
-        if (*cursor!='[')
+        if ((col = parse_color(&cursor)) & PARSE_ESC_CLR_ERROR_FLAG)
           return false;
-        while ((tmp= *++cursor) && tmp != ']')
-          ++slen;
- 
-        if (!tmp)
-          return false;
- 
-        for (int i = 0; i < slen; ++i)
-          if (!isdigit(tmp = *(cursor - 1 - i)))
-            return false;
-          else
-            idx += (tmp-'0')*ipow(10, i);
- 
-        col = clrs[idx];
-        ++cursor;
-#else
-        if ((col = parse_color(&cursor)) & PARSE_ESC_CLR_ERROR_FLAG) {
-          return false;
-        }
-#endif
-      } else {
-        // TODO: Add support for other escape chars later.
       }
       continue;
     }
