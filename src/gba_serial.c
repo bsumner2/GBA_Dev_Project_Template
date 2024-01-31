@@ -3,7 +3,7 @@
 #include "gba_functions.h"
 #include "gba_types.h"
 
-bool_t Serial_MP_Setup(bool_t initialize, bool_t *is_parent) {
+bool_t Serial_MP_Setup(u16_t baud_rate, bool_t initialize, bool_t *is_parent) {
 
   Serial_Ctl_t sctl = REG_SIOCNT;
   if (initialize) {
@@ -14,19 +14,23 @@ bool_t Serial_MP_Setup(bool_t initialize, bool_t *is_parent) {
   
   
   sctl.raw_bits = REG_SERIAL_IOCNT;
+  sctl.multi.baud_rate = baud_rate&3;
+  REG_SIOCNT = sctl;
+  sctl = REG_SIOCNT;
   if (is_parent)
-    *is_parent = sctl.multi.SI_terminal;
+    *is_parent = !sctl.multi.SI_terminal;
+
+  
   return sctl.multi.SD_terminal;
 }
 
-Serial_MP_Rsp_t Serial_MP_Get_Response(void) {
-  Serial_MP_Rsp_t data;
+void Serial_MP_Get_Response(Serial_MP_Rsp_t *dst) {
   for (int i = 0; i < 4; ++i)
-    data.data[i] = SIO_MULTI(i);
+    dst->data[i] = SIO_MULTI(i);
   Serial_Ctl_t sctl = REG_SIOCNT;
-  data.player_id = sctl.multi.mp_ID;
-  return data;
+  dst->player_id = sctl.multi.mp_ID;
 }
+
 
 
 

@@ -5,6 +5,7 @@
 #include "gba_serial.h"
 #include "gba_types.h"
 #include <stddef.h>
+#include <stdio.h>
 #include "gba_stdio.h"
 
 #if 0
@@ -88,36 +89,39 @@ int main(void) {
       while (KEY_PRESSED(A)) 
         continue;
       Mode3_printf(0,64, 0x7FFF, "Initializing multiplayer.\n");
-      if (!Serial_MP_Setup(true, &is_host))
-        while (!Serial_MP_Setup(false, &is_host));
+      if (!Serial_MP_Setup(SERIAL_BAUD_FLAG_9600, true, &is_host))
+        while (!Serial_MP_Setup(SERIAL_BAUD_FLAG_9600, false, &is_host));
       break;
     }
   }
 
-  Mode3_printf(0, 72, 0x7fff, "Successful.\nIs Host: %s\n", is_host?"True":"False");
+  Mode3_printf(0, 124, 0x7fff, "Successful.\nIs Host: %s\n", is_host?"True":"False");
   Serial_MP_Rsp_t response;
   Serial_Ctl_t ctl;
-  if (is_host) {
-    Serial_MP_SetData(0x7fff);
-    Serial_MP_StartTransfer();
-    while ((ctl.multi.start_bit));
-    REG_SIOCNT = ctl;
-
+  while (1) {
+    if (!KEY_PRESSED(A)) continue;
+    if (is_host) {
+      Serial_MP_SetData(0x7fff);
+      Serial_MP_StartTransfer();
+      while (((ctl = REG_SIOCNT).multi.start_bit))
+        Mode3_puts("Awaiting", 0, 152, 0x7FFF);
+    } else {
+      Serial_MP_SetData(RED_MASK);
+      while (((ctl = REG_SIOCNT).multi.start_bit))
+        Mode3_puts("Awaiting", 0, 152, 0x7FFF);
+    }
+    break;
   }
-  else {
-    Serial_MP_SetData(RED_MASK);
-    while ((ctl.multi.start_bit));
-    REG_SIOCNT = ctl;
+  if (!((ctl = REG_SIOCNT).multi.SD_terminal) || ctl.multi.mp_error) {
+    Mode3_printf(0, 0, RED_MASK, "Error occurred: %X", ctl.raw_bits);
   }
+  Serial_MP_Get_Response(&response);
 
-  response = Serial_MP_Get_Response();
 
-  Mode3_printf(0, 5, 0x7fff, "Player ID: %d\nIs Master: %s\n", response.player_id, is_host?"True":"False");
-  VIDEO_BUF[0] = response.data[0];
-  VIDEO_BUF[1] = response.data[1];
+  Mode3_printf(0, 5, 0x7fff, "Player ID: %d\nIs Master: %s", response.player_id, is_host?"True":"False");
+  Mode3_printf(0, 80, 0x7fff, "SERIAL_MULTI<1,2> = 0x%04X, 0x%04X", response.data[0], response.data[1]);
   while (1);
 }
-
 
 #else
 

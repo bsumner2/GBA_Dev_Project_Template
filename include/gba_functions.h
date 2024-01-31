@@ -106,7 +106,7 @@ void Play_Note(Snd_Note_Idx_t note, int octave);
 void DMG_Square1_Init(u16_t duty_cycle, bool_t envelope_increasing, u16_t len,
     u16_t init_val);
 
-bool_t Serial_MP_Setup(bool_t initialize, bool_t *is_parent);
+bool_t Serial_MP_Setup(u16_t baud_rate, bool_t initialize, bool_t *is_parent);
 
 #ifdef __cplusplus
 }

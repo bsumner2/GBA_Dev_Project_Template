@@ -29,4 +29,5 @@ bool_t Mode3_putchar(u32_t x, u32_t y, char c, u16_t color);
 
 
 
+
 #endif  /* _GBA_STDIO_H_ */

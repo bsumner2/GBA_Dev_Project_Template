@@ -14,9 +14,10 @@ STAT_INLN void Serial_MP_SetData(u16_t data) {
 STAT_INLN void Serial_MP_StartTransfer(void) {
   Serial_Ctl_t sctl = REG_SIOCNT;
   sctl.multi.start_bit = 1;
+  REG_SIOCNT = sctl;
 }
 
-Serial_MP_Rsp_t Serial_MP_Get_Response(void);
+void Serial_MP_Get_Response(Serial_MP_Rsp_t*);
 
 #ifdef __cplusplus
 }
