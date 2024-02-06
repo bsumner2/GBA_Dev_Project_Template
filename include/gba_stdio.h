@@ -1,9 +1,15 @@
 #ifndef _GBA_STDIO_H_
 #define _GBA_STDIO_H_
+#ifdef __cplusplus
+#define restrict
+extern "C" {
+#endif  /* CXX Header Guard */
+
 
 #include <stdarg.h>
 #include "gba_types.h"
 #include "gba_util_macros.h"
+
 
 
 /**
@@ -28,6 +34,9 @@ bool_t Mode3_puts(const char* restrict s, int x, int y, u16_t color);
 bool_t Mode3_putchar(u32_t x, u32_t y, char c, u16_t color);
 
 
-
+#ifdef __cplusplus
+}
+#undef resctrict
+#endif  /* CXX Header Guard */
 
 #endif  /* _GBA_STDIO_H_ */
