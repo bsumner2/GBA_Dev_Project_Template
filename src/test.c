@@ -6,6 +6,8 @@
 #include "gba_types.h"
 #include <stddef.h>
 #include <stdio.h>
+
+#define GBA_STDIO_LEGACY
 #include "gba_stdio.h"
 
 #if 0

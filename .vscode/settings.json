@@ -1,0 +1,10 @@
+{
+    "C_Cpp.workspaceSymbols": "All",
+    "C_Cpp.inlayHints.referenceOperator.showSpace": true,
+    "C_Cpp.inlayHints.referenceOperator.enabled": true,
+    "C_Cpp.inlayHints.autoDeclarationTypes.showOnLeft": false,
+    "C_Cpp.inlayHints.parameterNames.enabled": true,
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.cStandard": "c99",
+    "C_Cpp.default.compilerPath": "/opt/devkitpro/devkitARM/bin/arm-none-eabi-g*"
+}
